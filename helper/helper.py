@@ -64,18 +64,18 @@ class utility:
       process = process.replace('.exe', '')
     try:
       retlist = []
-      output = os.popen(f'powershell ps -Name {process}').read()
+      output = os.popen(f'powershell Get-Process -Name {process}').read()
       for line in output.splitlines():
-        if '(' in line:
+        if '  SI ' in line:
           index = line.find('  SI ')
         if '.' in line:
-          diffrence = line[0:index]
-          list = diffrence.split('  ')
-          retlist.append(list[-1].replace(' ', ''))
+          diffrence = line[:index]
+          proc_info = diffrence.split()[-1].replace(' ', '')
+          retlist.append(proc_info)
       return retlist
     except Exception:
-      print(f'ERROR: Cannot find process {process}.')
-      sys.exit(1)
+        print(f'ERROR: Cannot find process {process}.')
+        sys.exit(1)
       
 
 print(utility.getPID('opera')) # So for some fucking reason this will print the PIDs but 
@@ -272,7 +272,7 @@ class driver:
 
     try:
       if arg1 == 'help':
-        commands.help()
+        print('There is no help command in helper.exe')
         sys.exit(0)
       elif arg1 == 'hexdump':
         try:
@@ -351,7 +351,6 @@ class driver:
       elif arg1 == 'getPID':
         try:
           print(utility.getPID(arg2))
-          sys.exit(0)
         except Exception as e:
           print(f'ERROR: Did you input the correct process name after the command. \n{e}\n')
           sys.exit(1)
