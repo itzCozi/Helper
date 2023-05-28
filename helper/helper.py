@@ -12,7 +12,7 @@ class files:
   processdump = f'{os.getcwd()}/processdump.txt'.replace('\\', '/')
 
 
-class utility:
+class commands:
 
   def processPath(process):
     # Returns the running processes path
@@ -38,7 +38,7 @@ class utility:
         if '.exe' in line:
           index = line.find('.exe')
           item = line[index + 5:].replace(' ', '')
-          itemobj = utility.nameFinder(item)
+          itemobj = commands.nameFinder(item)
           if itemobj and itemobj not in iterated:
             retlist.append(itemobj)
             iterated.add(itemobj)
@@ -48,7 +48,7 @@ class utility:
       print(f'ERROR: An unknown error was encountered. \n{e}\n')
       sys.exit(1)
 
-  def nameFinder(PID):
+  def getNAME(PID):
     # Gets a process name from PID
     output = os.popen(f'tasklist /svc /FI "PID eq {PID}"').read()
     for line in str(output).splitlines():
@@ -58,7 +58,7 @@ class utility:
         retvalue = f'{diffrence}.exe'
         return retvalue
 
-  def getPID(process): # MAKE IT STOP CRASHING THE TARGET PROGRAM
+  def getPID(process):
     # Returns a process PID from name
     if '.exe' in process:
       process = process.replace('.exe', '')
@@ -76,13 +76,6 @@ class utility:
     except Exception:
         print(f'ERROR: Cannot find process {process}.')
         sys.exit(1)
-      
-
-print(utility.getPID('opera')) # So for some fucking reason this will print the PIDs but 
-# when called through argHandler() it wont print the PIDs but both crash the target program
-
-
-class commands:
 
   def hexdump(file):
     # Creates a hex dump from given file
@@ -196,7 +189,7 @@ class commands:
     # Kills a running process and then deletes it
     if not '.exe' in process:
       process = f'{process}.exe'
-    proc_path = utility.processPath(process)
+    proc_path = commands.processPath(process)
 
     try:
       try:
@@ -219,7 +212,7 @@ class commands:
         if '.exe' in line:
           index = line.find('.exe')
           item = line[index + 5:].replace(' ', '')
-          itemobj = utility.nameFinder(item)
+          itemobj = commands.nameFinder(item)
           if not itemobj in iterated:
             retlist.append(itemobj)
           else:
@@ -244,7 +237,7 @@ class commands:
     # Ends given process
     if name.endswith('.exe'):
       name = name.replace('.exe', '')
-    PIDlist = utility.getPID(name)
+    PIDlist = commands.getPID(name)
     if PIDlist == None:
       print('ERROR: Process/Child-processes cannot be located.')
       sys.exit(1)
@@ -255,130 +248,26 @@ class commands:
         print(f'ERROR: Process {name} cannot be located.')
         sys.exit(1)
 
-
-class driver:
-
-  def argHandler():
-    # Made that dynamic arg handler yuhhh!
+  def filter_file(file, word):
+    # Search a file for given word and remove it
+    if not os.path.exists(file):
+      print(f'ERROR: Given file {file} cannot be found.')
+      sys.exit(1)
     try:
-      if __file__.endswith('.py'):
-        arg1 = sys.argv[1]
-        arg2 = sys.argv[2]
-      if __file__.endswith('.exe'):
-        arg1 = sys.argv[0]
-        arg2 = sys.argv[1]
-    except:
-      pass
-
-    try:
-      if arg1 == 'help':
-        print('There is no help command in helper.exe')
-        sys.exit(0)
-      elif arg1 == 'hexdump':
-        try:
-          commands.hexdump(arg2)
-          sys.exit(0)
-        except Exception as e:
-          if not os.path.exists(arg2):
-            print(f'ERROR: Helper cannot find {arg2} in file-system.')
-            sys.exit(1)
-          else:
-            print(f'ERROR: An unknown error was encountered. \n{e}\n')
-            sys.exit(1)
-      elif arg1 == 'tempdump':
-        try:
-          commands.tempdump()
-          sys.exit(0)
-        except Exception as e:
-          print(f'ERROR: An unknown error was encountered. \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'libdump':
-        try:
-          commands.libdump()
-          sys.exit(0)
-        except Exception as e:
-          print(f'ERROR: An unknown error was encountered. \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'folderdump':
-        try:
-          commands.folderdump(arg2)
-          sys.exit(0)
-        except FileExistsError:
-          print('ERROR: A dumpfolder already exists in this directory.')
-          sys.exit(1)
-        except Exception as e:
-          print(f'ERROR: An unknown error was encountered. \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'rm-running':
-        try:
-          commands.removeRunning(arg2)
-          sys.exit(0)
-        except Exception as e:
-          if not os.path.exists(arg2):
-            print(f'ERROR: Helper cannot find {arg2} in file-system.')
-            sys.exit(0)
-          else:
-            print(f'ERROR: An unknown error was encountered. \n{e}\n')
-            sys.exit(1)
-      elif arg1 == 'get-running':
-        try:
-          commands.getRunning()
-          sys.exit(0)
-        except Exception as e:
-          print(f'ERROR: An unknown error was encountered. \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'print-running':
-        try:
-          print(utility.getProcesses())
-          sys.exit(0)
-        except Exception as e:
-          print(f'ERROR: An unknown error was encountered. \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'kill-process' or 'kill':
-        try:
-          commands.killProcess(arg2)
-          sys.exit(0)
-        except Exception as e:
-          print(f'ERROR: A runtime error occurred, is the process running? \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'find-process':
-        try:
-          print(utility.processPath(arg2))
-          sys.exit(0)
-        except Exception as e:
-          print(f'ERROR: A runtime error occurred, is the process running? \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'getPID':
-        try:
-          print(utility.getPID(arg2))
-        except Exception as e:
-          print(f'ERROR: Did you input the correct process name after the command. \n{e}\n')
-          sys.exit(1)
-      elif arg1 == 'getNAME':
-        try:
-          print(utility.nameFinder(arg2))
-          sys.exit(0)
-        except Exception as e:
-          print(f'ERROR: Did you enter a valid PID after the command. \n{e}\n')
-          sys.exit(1)
-
+      with open(file, 'r+') as Fin:
+        content = Fin.read()
+      if word in content:
+        with open(file, 'w+') as Fout:
+          write_item = content.replace(word, '')
+          Fout.write(write_item)
       else:
-        print('ERROR: The given argument is not recognized, try the help command.')
+        print(f'ERROR: {word} cannot be found in {file}.')
         sys.exit(1)
-
-    except PermissionError:
-      print('ERROR: Action executed without required permissions.')
-      sys.exit(1)
-    except UnboundLocalError:
-      print('ERROR: Please try again with a valid argument.')
-      sys.exit(1)
     except Exception as e:
       print(f'ERROR: An unknown error was encountered. \n{e}\n')
       sys.exit(1)
 
 
 if __name__ == '__main__':
-  driver.argHandler()
-else:
-  print(f'ERROR: You cannot import {__file__}.')
+  print(f'ERROR: You must import {__file__}.')
   sys.exit(1)
