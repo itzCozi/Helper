@@ -76,6 +76,10 @@ class utility:
     except Exception:
       print(f'ERROR: Cannot find process {process}.')
       sys.exit(1)
+      
+
+print(utility.getPID('opera')) # So for some fucking reason this will print the PIDs but 
+# when called through argHandler() it wont print the PIDs but both crash the target program
 
 
 class commands:
