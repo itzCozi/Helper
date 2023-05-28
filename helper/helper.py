@@ -58,7 +58,7 @@ class utility:
         retvalue = f'{diffrence}.exe'
         return retvalue
 
-  def getPID(process):
+  def getPID(process): # MAKE IT STOP CRASHING THE TARGET PROGRAM
     # Returns a process PID from name
     if '.exe' in process:
       process = process.replace('.exe', '')
