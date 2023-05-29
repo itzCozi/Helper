@@ -1,8 +1,7 @@
-'''
-OS: Windows10
-PY-VERSION: 3.11+
-GITHUB: https://github.com/itzCozi/Helper
-'''
+# OS: Windows10
+# PY-VERSION: 3.11+
+# GITHUB: https://github.com/itzCozi/Helper
+
 try:
   import os, sys
   import signal
@@ -285,6 +284,7 @@ if __name__ == '__main__': # Sorry this looks ugly (looks like JS TBH)
   \nEXAMPLE: from {file_name} import functions as lib \
   \n------------------------------------------------------\n")
   sys.exit(1)
+  
 if 'linux' in vars.platform:
   print(f"\n------------------------------------------------ \
   \nTHIS PROGRAM IS ONLY COMPATIBLE WITH WINDOWS. \
