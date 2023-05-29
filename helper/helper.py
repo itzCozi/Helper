@@ -1,6 +1,6 @@
 '''
-PY-VERSION: 3.11+
 OS: Windows10
+PY-VERSION: 3.11+
 GITHUB: https://github.com/itzCozi/Helper
 '''
 try:
