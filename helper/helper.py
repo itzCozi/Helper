@@ -1,9 +1,16 @@
-# SYSTEM: Windows
-# PYTHON: 3.11
-import os, sys
-import signal
-import time
-
+'''
+PY-VERSION: 3.11+
+OS: Windows10
+GITHUB: https://github.com/itzCozi/Helper
+'''
+try:
+  import os, sys
+  import signal
+  import time
+except ModuleNotFoundError:
+  print('ERROR: [PACKAGES] An unknown package could not be imported.')
+  sys.exit(1)
+  
 
 class files:
   hexdump = f'{os.getcwd()}/hexdump.txt'.replace('\\', '/')
