@@ -38,7 +38,7 @@ class commands:
         if '.exe' in line:
           index = line.find('.exe')
           item = line[index + 5:].replace(' ', '')
-          itemobj = commands.nameFinder(item)
+          itemobj = commands.getNAME(item)
           if itemobj and itemobj not in iterated:
             retlist.append(itemobj)
             iterated.add(itemobj)
@@ -212,7 +212,7 @@ class commands:
         if '.exe' in line:
           index = line.find('.exe')
           item = line[index + 5:].replace(' ', '')
-          itemobj = commands.nameFinder(item)
+          itemobj = commands.getNAME(item)
           if not itemobj in iterated:
             retlist.append(itemobj)
           else:
@@ -268,6 +268,11 @@ class commands:
       sys.exit(1)
 
 
-if __name__ == '__main__':
-  print(f'ERROR: You must import {__file__}.')
+if __name__ == '__main__': # Sorry this looks ugly (looks like JS TBH)
+  file_name = os.path.basename(__file__).split('/')[-1]
+  file_name = file_name[:file_name.find('.')]
+  print(f"\n------------------------------------------------ \
+  \nYOU MUST IMPORT 'commands' CLASS FROM {file_name}. \
+  \nEXAMPLE: from {file_name} import commands \
+  \n------------------------------------------------\n")
   sys.exit(1)
