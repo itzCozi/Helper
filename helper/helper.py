@@ -7,19 +7,21 @@ try:
   import os, sys
   import signal
   import time
+  from sys import platform
 except ModuleNotFoundError:
   print('ERROR: [PACKAGES] An unknown package could not be imported.')
   sys.exit(1)
   
 
-class files:
+class vars: # Variable class/container
+  platform = sys.platform
   hexdump = f'{os.getcwd()}/hexdump.txt'.replace('\\', '/')
   tempdump = f'{os.getcwd()}/tempdump.txt'.replace('\\', '/')
   libdump = f'{os.getcwd()}/libdump.txt'.replace('\\', '/')
   processdump = f'{os.getcwd()}/processdump.txt'.replace('\\', '/')
 
 
-class commands:
+class functions:
 
   def processPath(process):
     # Returns the running processes path
@@ -45,7 +47,7 @@ class commands:
         if '.exe' in line:
           index = line.find('.exe')
           item = line[index + 5:].replace(' ', '')
-          itemobj = commands.getNAME(item)
+          itemobj = functions.getNAME(item)
           if itemobj and itemobj not in iterated:
             retlist.append(itemobj)
             iterated.add(itemobj)
@@ -96,7 +98,7 @@ class commands:
       line = []
     f.close()
 
-    with open(files.hexdump, 'a') as out:
+    with open(vars.hexdump, 'a') as out:
       for byte in content:
         bytes += 1
         line.append(byte)
@@ -114,7 +116,7 @@ class commands:
           out.write('\n')
       out.close()
 
-  def tempdump():  # Add to (Commands&Arguments) wiki
+  def tempdump():
     # Dumps all files in temp directorys
     win_files = []
     user_files = []
@@ -129,7 +131,7 @@ class commands:
         bar = f'{ur}/{tempfile}'
         user_files.append(bar)
 
-    with open(files.tempdump, 'a') as out:
+    with open(vars.tempdump, 'a') as out:
       for file in win_files:
         out.write(f'{file}\n'.replace('\\', '/'))
       for file2 in user_files:
@@ -148,7 +150,7 @@ class commands:
             item = f'{r}/{file}'.replace('\\', '/')
             dll_list.append(item)
 
-      with open(files.libdump, 'a') as out:
+      with open(vars.libdump, 'a') as out:
         for item in dll_list:
           out.write(f'{item}\n')
         out.close()
@@ -169,7 +171,7 @@ class commands:
         # Hexdump files are stored in a folder named after the source file
         if file.endswith('.exe') or file.endswith('.dll'):
           os.mkdir(f'{output_dir}/{file}')
-        files.hexdump = f'{output_dir}/{file}/hexdump.txt'
+        vars.hexdump = f'{output_dir}/{file}/hexdump.txt'
         file_path = f'{r}/{file}'.replace('\\', '/')
         manifest = f'{output_dir}/MANIFEST'
 
@@ -178,7 +180,7 @@ class commands:
         log.close()
 
         if file.endswith('.exe') or file.endswith('.dll'):
-          commands.hexdump(file_path)
+          functions.hexdump(file_path)
         elif 'LICENSE' in file:
           license = file_path
           with open(license, 'r') as f1:
@@ -196,11 +198,11 @@ class commands:
     # Kills a running process and then deletes it
     if not '.exe' in process:
       process = f'{process}.exe'
-    proc_path = commands.processPath(process)
+    proc_path = functions.processPath(process)
 
     try:
       try:
-        commands.killProcess(process)
+        functions.killProcess(process)
       except:
         pass
       time.sleep(0.5)
@@ -219,7 +221,7 @@ class commands:
         if '.exe' in line:
           index = line.find('.exe')
           item = line[index + 5:].replace(' ', '')
-          itemobj = commands.getNAME(item)
+          itemobj = functions.getNAME(item)
           if not itemobj in iterated:
             retlist.append(itemobj)
           else:
@@ -232,7 +234,7 @@ class commands:
         if item == None:
           retlist.remove(item)
         else:
-          with open(files.processdump, 'a') as out:
+          with open(vars.processdump, 'a') as out:
             out.write(f'{item}\n')
           out.close()
 
@@ -244,7 +246,7 @@ class commands:
     # Ends given process
     if name.endswith('.exe'):
       name = name.replace('.exe', '')
-    PIDlist = commands.getPID(name)
+    PIDlist = functions.getPID(name)
     if PIDlist == None:
       print('ERROR: Process/Child-processes cannot be located.')
       sys.exit(1)
@@ -255,7 +257,7 @@ class commands:
         print(f'ERROR: Process {name} cannot be located.')
         sys.exit(1)
 
-  def filter_file(file, word):
+  def filterFile(file, word):
     # Search a file for given word and remove it
     if not os.path.exists(file):
       print(f'ERROR: Given file {file} cannot be found.')
@@ -278,8 +280,20 @@ class commands:
 if __name__ == '__main__': # Sorry this looks ugly (looks like JS TBH)
   file_name = os.path.basename(__file__).split('/')[-1]
   file_name = file_name[:file_name.find('.')]
-  print(f"\n------------------------------------------------ \
-  \nYOU MUST IMPORT 'commands' CLASS FROM {file_name}. \
-  \nEXAMPLE: from {file_name} import commands \
-  \n------------------------------------------------\n")
+  print(f"\n------------------------------------------------------ \
+  \nYOU MUST IMPORT THE '{functions.__name__}' CLASS FROM '{file_name}'. \
+  \nEXAMPLE: from {file_name} import functions as lib \
+  \n------------------------------------------------------\n")
   sys.exit(1)
+if 'linux' in vars.platform:
+  print(f"\n------------------------------------------------ \
+  \nTHIS PROGRAM IS ONLY COMPATIBLE WITH WINDOWS. \
+  \nSOME ISSUES MAY BE ENCOUNTERED, CONTINUE? \
+  \n------------------------------------------------")
+  user_input = input('(y/n)> ')
+  if 'y' in user_input.lower():
+    print('\nYIELDING...')
+    vars.platform = 'yielded'
+  if 'n' in user_input.lower():
+    print('\nQUITTING...')
+    sys.exit(1)
