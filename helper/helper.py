@@ -183,42 +183,6 @@ class functions:
       print(f'ERROR: An unknown error was encountered. \n{e}\n')
       sys.exit(1)
 
-  def folderdump(folder):
-    # Gets all files in given folder and dumps them
-    if not os.path.exists(folder):
-      print(f'ERROR: Helper cannot find directory {folder}.')
-      sys.exit(1)
-    output_dir = f'{os.getcwd()}/folderdump'
-    os.mkdir(output_dir)
-
-    for r, d, f in os.walk(folder):
-      for file in f:
-        # Hexdump files are stored in a folder named after the source file
-        if file.endswith('.exe') or file.endswith('.dll'):
-          os.mkdir(f'{output_dir}/{file}')
-        vars.hexdump = f'{output_dir}/{file}/hexdump.txt'
-        file_path = f'{r}/{file}'.replace('\\', '/')
-        manifest = f'{output_dir}/MANIFEST'
-
-        with open(manifest, 'a') as log:
-          log.write(f'{file}\n')
-        log.close()
-
-        if file.endswith('.exe') or file.endswith('.dll'):
-          functions.hexdump(file_path)
-        elif 'LICENSE' in file:
-          license = file_path
-          with open(license, 'r') as f1:
-            l_content = f1.read()
-          f1.close()
-          open(f'{output_dir}/LICENSE', 'w').write(l_content)
-        elif 'README' in file:
-          readme = file_path
-          with open(readme, 'r') as f2:
-            r_content = f2.read()
-          f2.close()
-          open(f'{output_dir}/README.md', 'w').write(r_content)
-
   def removeRunning(process):
     # Kills a running process and then deletes it
     if not '.exe' in process:
