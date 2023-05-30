@@ -21,6 +21,13 @@ class vars: # Variable class/container
 
 
 class functions:
+  
+  def clear():
+    # Clears the working console
+    if 'win' in vars.platform:
+      return os.system('cls')
+    else:
+      return os.system('clear')
 
   def processPath(process):
     # Returns the running processes path
@@ -255,6 +262,31 @@ class functions:
       except Exception as e:
         print(f'ERROR: Process {name} cannot be located.')
         sys.exit(1)
+        
+  def getTime():
+    out = os.popen('time /t').read()
+    if 'PM' in out:
+      index = out.find('PM')
+    else:
+      index = out.find('AM')
+    time = out[:index]
+    return time
+
+  def easyLog(type, message, file):
+    # TYPE: What type of log, example: [PACKAGES] Failed import of ...
+    # MESSAGE: The desired message to display with the log.
+    # FILE: A optional way to output logs to a file.
+    time = functions.getTime()
+    
+    if not os.path.exists(file):
+      print(f'ERROR: Could not find {file}.')
+      sys.exit(1)
+
+    with open(file, 'a') as log_file:
+      log_file.write(f"\n[{type}] {message} - {time}\n")
+      log_file.close()
+    # Finish this up
+        
 
   def filterFile(file, word):
     # Search a file for given word and remove it
