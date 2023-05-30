@@ -6,7 +6,10 @@ try:
   import os, sys
   import signal
   import time
+  import string
+  import random
   from sys import platform
+  from cryptography.fernet import Fernet
 except ModuleNotFoundError:
   print('ERROR: [PACKAGES] An unknown package could not be imported.')
   sys.exit(1)
@@ -306,6 +309,45 @@ class functions:
     except Exception as e:
       print(f'ERROR: An unknown error was encountered. \n{e}\n')
       sys.exit(1)
+
+
+class crypto:
+
+  def encrypt(file):
+    # Encrypt the given file and return a key
+    if not os.path.exists(file):
+      print(f'ERROR: Could not find {file}.')
+      sys.exit(1)
+
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+
+    with open(file, 'rb') as Fin:
+      original = Fin.read()
+      Fin.close()
+    encrypted = fernet.encrypt(original)
+
+    with open(file, 'wb') as Fout:
+      Fout.write(encrypted)
+      Fout.close()
+    return key
+
+  def decrypt(file, key):
+    # Decrypt an encrypted file with a key
+    if not os.path.exists(file):
+      print(f'ERROR: Could not find {file}.')
+      sys.exit(1)
+
+    fernet = Fernet(key)
+
+    with open(file, 'rb') as Fin:
+      encrypted = Fin.read()
+      Fin.close()
+    decrypted = fernet.decrypt(encrypted)
+
+    with open(file, 'wb') as Fout:
+      Fout.write(decrypted)
+      Fout.close()
 
 
 if __name__ == '__main__': # Sorry this looks ugly (looks like JS TBH)
