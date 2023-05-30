@@ -25,6 +25,22 @@ class vars: # Variable class/container
 
 class functions:
   
+  def genID():
+    # Creates a unique ID
+    lenght = 8
+    buffer = random.randint(3, 6)
+    alphabet = list(string.ascii_letters+string.digits+string.digits)
+    ID = []
+
+    for i in range(buffer):
+      random.shuffle(alphabet)
+    
+    for num in range(lenght):
+      char = random.choice(alphabet)
+      ID.append(char)
+    
+    return ''.join(ID)
+  
   def clear():
     # Clears the working console
     if 'win' in vars.platform:
@@ -312,6 +328,45 @@ class functions:
     except Exception as e:
       print(f'ERROR: An unknown error was encountered. \n{e}\n')
       sys.exit(1)
+
+
+class crypto:
+
+  def encrypt(file):
+    # Encrypt the given file and return a key
+    if not os.path.exists(file):
+      print(f'ERROR: Could not find {file}.')
+      sys.exit(1)
+
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+
+    with open(file, 'rb') as Fin:
+      original = Fin.read()
+      Fin.close()
+    encrypted = fernet.encrypt(original)
+
+    with open(file, 'wb') as Fout:
+      Fout.write(encrypted)
+      Fout.close()
+    return key
+
+  def decrypt(file, key):
+    # Decrypt an encrypted file with a key
+    if not os.path.exists(file):
+      print(f'ERROR: Could not find {file}.')
+      sys.exit(1)
+
+    fernet = Fernet(key)
+
+    with open(file, 'rb') as Fin:
+      encrypted = Fin.read()
+      Fin.close()
+    decrypted = fernet.decrypt(encrypted)
+
+    with open(file, 'wb') as Fout:
+      Fout.write(decrypted)
+      Fout.close()
 
 
 class crypto:
