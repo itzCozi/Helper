@@ -285,10 +285,13 @@ class functions:
       print(f'ERROR: Could not find {file}.')
       sys.exit(1)
 
-    with open(file, 'a') as log_file:
-      log_file.write(f"\n[{type}] {message} - {time}\n")
-      log_file.close()
-    # Finish this up
+    try:
+      with open(file, 'a') as log_file:
+        log_file.write(f"\n[{type}] {message} - {time}\n")
+        log_file.close()
+    except Exception as e:
+      print(f'ERROR: Could not open {file}.')
+      sys.exit(1)
         
 
   def filterFile(file, word):
