@@ -27,7 +27,7 @@ class functions:
   def genID():
     # Creates a unique ID
     lenght = 8
-    buffer = random.randint(3, 6)
+    buffer = random.randint(3, 8)
     alphabet = list(string.ascii_letters+string.digits+string.digits)
     ID = []
 
