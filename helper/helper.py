@@ -12,9 +12,9 @@ try:
 except Exception as e:
   print(f'ERROR: An error occurred when importing dependencies. \n{e}\n')
   sys.exit(1)
-  
 
-class vars: # Variable class/container
+
+class vars:  # Variable class/container
   platform = sys.platform
   hexdump = f'{os.getcwd()}/hexdump.txt'.replace('\\', '/')
   tempdump = f'{os.getcwd()}/tempdump.txt'.replace('\\', '/')
@@ -23,23 +23,22 @@ class vars: # Variable class/container
 
 
 class functions:
-  
+
   def genID():
     # Creates a unique ID
     lenght = 8
     buffer = random.randint(3, 8)
-    alphabet = list(string.ascii_letters+string.digits+string.digits)
+    alphabet = list(string.ascii_letters + string.digits + string.digits)
     ID = []
 
     for i in range(buffer):
       random.shuffle(alphabet)
-    
+
     for num in range(lenght):
       char = random.choice(alphabet)
       ID.append(char)
-    
     return ''.join(ID)
-  
+
   def clear():
     # Clears the working console
     if 'win' in vars.platform:
@@ -107,8 +106,8 @@ class functions:
           retlist.append(proc_info)
       return retlist
     except Exception:
-        print(f'ERROR: Cannot find process {process}.')
-        sys.exit(1)
+      print(f'ERROR: Cannot find process {process}.')
+      sys.exit(1)
 
   def hexdump(file):
     # Creates a hex dump from given file
@@ -244,7 +243,7 @@ class functions:
       except Exception as e:
         print(f'ERROR: Process {name} cannot be located.')
         sys.exit(1)
-        
+
   def getTime():
     out = os.popen('time /t').read()
     if 'PM' in out:
@@ -259,7 +258,7 @@ class functions:
     # MESSAGE: The desired message to display with the log.
     # FILE: A optional way to output logs to a file.
     time = functions.getTime()
-    
+
     if not os.path.exists(file):
       print(f'ERROR: Could not find {file}.')
       sys.exit(1)
@@ -271,7 +270,6 @@ class functions:
     except Exception as e:
       print(f'ERROR: Could not open {file}.')
       sys.exit(1)
-        
 
   def filterFile(file, word):
     # Search a file for given word and remove it
@@ -371,7 +369,7 @@ class crypto:
       Fout.close()
 
 
-if __name__ == '__main__': # Sorry this looks ugly (looks like JS TBH)
+if __name__ == '__main__':  # Sorry this looks ugly (looks like JS TBH)
   file_name = os.path.basename(__file__).split('/')[-1]
   file_name = file_name[:file_name.find('.')]
   print(f"\n------------------------------------------------------ \
@@ -379,7 +377,7 @@ if __name__ == '__main__': # Sorry this looks ugly (looks like JS TBH)
   \nEXAMPLE: from {file_name} import functions as lib \
   \n------------------------------------------------------\n")
   sys.exit(1)
-  
+
 if 'linux' in vars.platform:
   print(f"\n------------------------------------------------ \
   \nTHIS PROGRAM IS ONLY COMPATIBLE WITH WINDOWS. \
